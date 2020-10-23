@@ -1,4 +1,4 @@
-package ro.ubbcluj.domain;
+package ro.ubbcluj.domain.Symbol;
 
 import java.util.ArrayList;
 
@@ -17,11 +17,18 @@ public class SymbolTable {
         }
     }
 
-    public boolean search (String data){
+    public int search (String data){
         if (this.root != null){
             return this.root.search(data);
         }
-        return false;
+        return -1;
+    }
+
+    public String searchById (int id){
+        if (this.root != null){
+            return this.root.searchById(id);
+        }
+        return "";
     }
 
     public ArrayList<String> getInorder(){

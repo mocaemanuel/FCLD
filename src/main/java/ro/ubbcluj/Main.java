@@ -1,9 +1,10 @@
 package ro.ubbcluj;
 
-import ro.ubbcluj.domain.SymbolTable;
+import ro.ubbcluj.domain.LexicalAnalyzer;
+import ro.ubbcluj.domain.Symbol.SymbolTable;
 
 public class Main {
-    public static void main(String[] args) {
+    private static void testSymbolTable(){
         SymbolTable symbolTable = new SymbolTable();
 
         System.out.println("\nINSERTION");
@@ -21,5 +22,23 @@ public class Main {
         System.out.println("\nFIND");
         System.out.println(symbolTable.search("salut"));
         System.out.println(symbolTable.search("ziua"));
+        System.out.println(symbolTable.search("merge"));
+
+        System.out.println("\nFIND BY ID");
+        System.out.println(symbolTable.searchById(1));
+        System.out.println(symbolTable.searchById(0));
+    }
+
+    private static void testScanner(){
+        SymbolTable symbolTable = new SymbolTable();
+        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer("Problem1.txt", "Lexic.txt", "Syntax.txt", "Token.txt", symbolTable);
+        lexicalAnalyzer.scan();
+    }
+
+    public static void main(String[] args) {
+        System.out.println("\n SYMBOL TABLE \n");
+        testSymbolTable();
+        System.out.println("\n SCANNER \n");
+        testScanner();
     }
 }

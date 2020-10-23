@@ -1,4 +1,4 @@
-package ro.ubbcluj.domain;
+package ro.ubbcluj.domain.Symbol;
 
 import java.util.ArrayList;
 
@@ -41,9 +41,9 @@ public class Node {
         }
     }
 
-    public boolean search(String data){
+    public int search(String data){
         if (this.data.equals(data)){
-            return true;
+            return this.id;
         }
         else if (data.compareTo(this.data) < 0 && this.left != null){
             return this.left.search(data);
@@ -51,7 +51,23 @@ public class Node {
         else if (data.compareTo(this.data) > 0 && this.right != null){
             return this.right.search(data);
         }
-        return false;
+        return -1;
+    }
+
+    public String searchById(int id){
+        String result = "";
+        if (this.id == id){
+            return this.data;
+        }
+        else{
+            if (this.left != null){
+                result += this.left.searchById(id);
+            }
+            if (this.right != null){
+                result += this.right.searchById(id);
+            }
+        }
+        return result;
     }
 
     public ArrayList<String> getInorder (ArrayList<String> listToReturn){
