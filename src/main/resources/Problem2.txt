@@ -1,4 +1,4 @@
-function p2() : void {
+fun p2() {
 	let a: int, b: int;
 	console.read(a);
 	console.read(b);
@@ -10,5 +10,5 @@ function p2() : void {
 		b = b - a;
 		}
 	}
-	console.print(a + " is the hcf of " + a + " and " + b);
+	console.write(a + " is the hcf of " + a + " and " + b);
 }

@@ -1,4 +1,4 @@
-function p3() : void {
+fun p3() {
 	let n: int, nos: int[50] = [], i: int, max:int = 0;
 	console.read(n);
 	for (i = 0; i < n; i ++) {
@@ -9,11 +9,11 @@ function p3() : void {
 			max = nos[n];
 		}
 	}
-	console.print(max + " is max ");
+	console.write(max + " is max ");
 	if (max % 2 == 0) {
-		console.print("and even");
+		console.write("and even");
 	}
 	else {
-		console.print("and odd");
+		console.write("and odd");
 	}
 }

@@ -3,10 +3,10 @@ package ro.ubbcluj.domain;
 import ro.ubbcluj.domain.Symbol.SymbolTable;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import javafx.util.Pair;
 
 public class LexicalAnalyzer {
     private File program;
@@ -14,6 +14,8 @@ public class LexicalAnalyzer {
     private File syntax;
     private File tokens;
     private SymbolTable symbolTable;
+    private ArrayList<Pair<Integer, Integer>> PIF = new ArrayList<>();
+    private HashMap<String, Integer> tokensMap;
 
     public LexicalAnalyzer(String program, String lexic, String syntax, String tokens, SymbolTable symbolTable){
         this.program = new File("D:\\FCLD\\Lab2\\src\\main\\resources\\" + program);
@@ -21,6 +23,7 @@ public class LexicalAnalyzer {
         this.syntax = new File("D:\\FCLD\\Lab2\\src\\main\\resources\\" + syntax);
         this.tokens = new File("D:\\FCLD\\Lab2\\src\\main\\resources\\" + tokens);
         this.symbolTable = symbolTable;
+        this.tokensMap = this.readTokens();
     }
 
     public void scan(){
@@ -35,13 +38,19 @@ public class LexicalAnalyzer {
                 List<String> tokens = this.detectToken(line);
 
                 for (String token : tokens) {
-                    if (this.validateToken(token)){
-                        this.generatePIF(token, -1);
+                    if (this.isOperatorSeparator(token) || this.isReservedWord(token)){
+                        if (!token.contains(" \t\n")){
+                            this.generatePIF(this.tokensMap.get(token), -1);
+                        }
                     }
-                    else if (this.isConstant(token)){
+                    else if(this.isID(token) || this.isConstant(token)){
                         this.symbolTable.insert(token);
                         int index = this.symbolTable.search(token);
-                        this.generatePIF(token, index);
+                        if (this.isID(token)){
+                            this.generatePIF(this.tokensMap.get("identifiers"), index);
+                        } else {
+                            this.generatePIF(this.tokensMap.get("constants"), index);
+                        }
                     }
                     else {
                         System.out.println("Lexical error! line: " + lineIndex + " - " + token);
@@ -49,40 +58,108 @@ public class LexicalAnalyzer {
                 }
             }
 
+            System.out.println(this.PIF.toString());
+            System.out.println(this.symbolTable.getInorder());
+
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private boolean isConstant(String token) {
-        return "^[a-zA-Z]([a-zA-Z]|[0-9])$".contains(token) || "^(0|[-]?[1-9][0-9]*)$".contains(token)
-                || "^\".*\"$".contains(token) || "^'.*'$".contains(token);
+    private boolean isOperatorSeparator(String token) {
+        List<String> possible = Arrays.asList(
+                "+", "*", "/", "%","=", "==", "!=", "<=", ">=", "<", ">", "^", "&", "|", "!",
+                "(", ")", "[", "]", "{", "}", ":", ";", ",", " ", "\t", "\n");
+        return possible.contains(token);
     }
 
-    private void generatePIF(String token, int i) {
-    }
-
-    private boolean validateToken(String token) {
-        List<String> possible = Arrays.asList("+", "*", "/", "%","=", "==", "!=", "<=", ">=", "<", ">", "^", "&", "|", "!",
-                "(", ")", "[", "]", "{", "}", ":", ";", ",", " ", "\t", "\n",
+    private boolean isReservedWord(String token) {
+        List<String> possible = Arrays.asList(
                 "fun", "if", "else", "while", "for", "from", "to", "console.write", "console.read",
                 "int", "boolean", "real", "char", "const", "let", "string", "true", "false");
         return possible.contains(token);
     }
 
-    private List<String> detectToken(String line) {
-        List<String> tokens = new ArrayList<>();
-        String[] l = line.strip().split( "[+*\"/=!<>^&|(){}:;,\t\n ]");
-
-        for (String element : l) {
-            if (!" \n\t".contains(element)){
-                System.out.println(element);
-                tokens.add(element);
-            }
-        }
-
-        return tokens;
+    private boolean isID (String token) {
+        return token.matches("^([a-zA-Z]|_[a-zA-Z])([_a-zA-Z]|[0-9])*$");
     }
 
+    private boolean isConstant (String token) {
+        return token.matches("^(0|([-]?|[+]?)[1-9][0-9]*)$") ||
+                token.matches("^\"([a-zA-Z0-9 ])*\"$") ||
+                token.matches("^'([a-zA-Z0-9])'$");
+    }
 
+    private void generatePIF(int token, int i) {
+        this.PIF.add(new Pair<>(token, i));
+    }
+
+    private HashMap<String, Integer> readTokens() {
+        HashMap<String, Integer> map = new HashMap<>();
+        File tokensFile = new File("D:\\FCLD\\Lab2\\src\\main\\resources\\definedTokens.txt");
+        Scanner tokensFileScanner = null;
+        try {
+            tokensFileScanner = new Scanner(tokensFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        assert tokensFileScanner != null;
+        String line = tokensFileScanner.nextLine();
+        while (tokensFileScanner.hasNext()) {
+            String[] l = line.strip().split(" ");
+            map.put(l[0], Integer.parseInt(l[1]));
+            line = tokensFileScanner.nextLine();
+        }
+        String[] l = line.strip().split(" ");
+        map.put(l[0], Integer.parseInt(l[1]));
+
+        return map;
+    }
+
+    private String getString(String[] l, int i, int j){
+        StringBuilder toReturn = new StringBuilder();
+        for (int k = i; k < j; k++){
+            toReturn.append(l[k]);
+        }
+
+        return toReturn.toString();
+    }
+
+    private List<String> detectToken(String line) {
+        List<String> tokens = new ArrayList<>();
+        String[] l = line.strip().split("");
+        final int length = line.strip().length();
+        int i = 0;
+        int j = 0;
+
+        while (j < length){
+            if (l[j].equals("\"")){
+                tokens.add(this.getString(l, i, j));
+                i = j;
+                j++;
+                if (!this.getString(l, i+1, length - 1).contains("\"")){
+                    j = length - 1;
+                } else {
+                    while (!l[j].equals("\"") && j < length){
+                        j++;
+                    }
+                    j++;
+                }
+            }
+            if (this.isOperatorSeparator(l[j])){
+                tokens.add(this.getString(l, i, j));
+                if ("=!<>".contains(l[j]) && l[j + 1].equals("=")){
+                    tokens.add(this.getString(l, j, j + 2));
+                    i = j+2;
+                    j++;
+                } else {
+                    tokens.add(l[j]);
+                    i = j+1;
+                }
+            }
+            j++;
+        }
+        tokens = tokens.stream().filter(a -> !" ,\n\t".contains(a)).collect(Collectors.toList());
+        return  tokens;
+    }
 }

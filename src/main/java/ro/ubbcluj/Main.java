@@ -31,13 +31,13 @@ public class Main {
 
     private static void testScanner(){
         SymbolTable symbolTable = new SymbolTable();
-        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer("Problem1.txt", "Lexic.txt", "Syntax.txt", "Token.txt", symbolTable);
+        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer("Problem4.txt", "Lexic.txt", "Syntax.txt", "Token.txt", symbolTable);
         lexicalAnalyzer.scan();
     }
 
     public static void main(String[] args) {
-        System.out.println("\n SYMBOL TABLE \n");
-        testSymbolTable();
+//        System.out.println("\n SYMBOL TABLE \n");
+//        testSymbolTable();
         System.out.println("\n SCANNER \n");
         testScanner();
     }
