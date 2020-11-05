@@ -68,7 +68,7 @@ public class LexicalAnalyzer {
 
     private boolean isOperatorSeparator(String token) {
         List<String> possible = Arrays.asList(
-                "+", "*", "/", "%","=", "==", "!=", "<=", ">=", "<", ">", "^", "&", "|", "!",
+                "+", "-", "*", "/", "%","=", "==", "!=", "<=", ">=", "<", ">", "^", "&", "|", "!",
                 "(", ")", "[", "]", "{", "}", ":", ";", ",", " ", "\t", "\n");
         return possible.contains(token);
     }
