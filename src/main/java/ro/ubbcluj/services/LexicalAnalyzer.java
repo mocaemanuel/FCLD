@@ -1,4 +1,4 @@
-package ro.ubbcluj.domain;
+package ro.ubbcluj.services;
 
 import ro.ubbcluj.domain.Symbol.SymbolTable;
 import java.io.File;
