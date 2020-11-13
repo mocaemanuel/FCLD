@@ -1,5 +1,6 @@
 package ro.ubbcluj.services;
 
+import ro.ubbcluj.domain.Automata.FiniteAutomata;
 import ro.ubbcluj.domain.Symbol.SymbolTable;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,6 +17,8 @@ public class LexicalAnalyzer {
     private SymbolTable symbolTable;
     private ArrayList<Pair<Integer, Integer>> PIF = new ArrayList<>();
     private HashMap<String, Integer> tokensMap;
+    private FiniteAutomata FA_identifier = new FiniteAutomata("fa_1.txt");
+    private FiniteAutomata FA_integer = new FiniteAutomata("fa_2.txt");
 
     public LexicalAnalyzer(String program, String lexic, String syntax, String tokens, SymbolTable symbolTable){
         this.program = new File("D:\\FCLD\\Lab2\\src\\main\\resources\\" + program);
@@ -81,11 +84,13 @@ public class LexicalAnalyzer {
     }
 
     private boolean isID (String token) {
-        return token.matches("^([a-zA-Z]|_[a-zA-Z])([_a-zA-Z]|[0-9])*$");
+        return this.FA_identifier.checkSequence(token);
+        //return token.matches("^([a-zA-Z]|_[a-zA-Z])([_a-zA-Z]|[0-9])*$");
     }
 
     private boolean isConstant (String token) {
-        return token.matches("^(0|([-]?|[+]?)[1-9][0-9]*)$") ||
+        //  return token.matches("^(0|([-]?|[+]?)[1-9][0-9]*)$") ||
+        return this.FA_integer.checkSequence(token) ||
                 token.matches("^\"([a-zA-Z0-9 ])*\"$") ||
                 token.matches("^'([a-zA-Z0-9])'$");
     }

@@ -41,7 +41,7 @@ public class Main {
     }
 
     private static void testFiniteAutomata() {
-        FiniteAutomata fa = new FiniteAutomata("fa.txt");
+        FiniteAutomata fa = new FiniteAutomata("fa_1.txt");
 
         while (true){
             try {
@@ -52,6 +52,7 @@ public class Main {
                         "\n3 - the transition function " +
                         "\n4 - the start state " +
                         "\n5 - the final states " +
+                        "\n6 - check sequence " +
                         "\n0 - exit." +
                         "\n>> ");
 
@@ -68,6 +69,13 @@ public class Main {
                     System.out.println(fa.getFA_q0());
                 else if (option == 5)
                     System.out.println(Arrays.toString(fa.getFA_F()));
+                else if (option == 6) {
+                    String sequence = br.readLine();
+                    if (fa.checkSequence(sequence))
+                        System.out.println(" Sequence accepted");
+                    else
+                        System.out.println(" Sequence not accepted");
+                }
                 else
                     return;
             } catch (Exception e){
@@ -80,10 +88,10 @@ public class Main {
 //        System.out.println("\n SYMBOL TABLE \n");
 //        testSymbolTable();
 
-//        System.out.println("\n SCANNER \n");
-//        testScanner();
+        System.out.println("\n SCANNER \n");
+        testScanner();
 
-        System.out.println("\n FINITE AUTOMATA \n");
-        testFiniteAutomata();
+//        System.out.println("\n FINITE AUTOMATA \n");
+//        testFiniteAutomata();
     }
 }

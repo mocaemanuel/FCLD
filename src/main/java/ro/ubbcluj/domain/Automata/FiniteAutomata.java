@@ -42,17 +42,6 @@ public class FiniteAutomata {
             line = programFileScanner.nextLine();
             fa.add(line.strip().split(" "));
 
-            // get the transition function
-            line = programFileScanner.nextLine();
-            String[] transitions = line.strip().split(";");
-
-            ArrayList<String[]> d = new ArrayList<>();
-            for (String t : transitions){
-                d.add(t.strip().split(","));
-            }
-
-            this.transitions = d;
-
             // get the start state
             line = programFileScanner.nextLine();
             fa.add(line.strip().split(" "));
@@ -60,6 +49,15 @@ public class FiniteAutomata {
             // get the final states
             line = programFileScanner.nextLine();
             fa.add(line.strip().split(" "));
+
+            // get the transition function
+            ArrayList<String[]> d = new ArrayList<>();
+            while (programFileScanner.hasNext()){
+                line = programFileScanner.nextLine();
+                d.add(line.strip().split(","));
+            }
+
+            this.transitions = d;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -80,6 +78,35 @@ public class FiniteAutomata {
         }
 
         return representation;
+    }
+
+    private boolean isDeterministic() {
+        for (ArrayList<String> element : this.getFA_d().values()){
+            if (element.size() > 1)
+                return false;
+        }
+        return true;
+    }
+
+    public boolean checkSequence(String sequence) {
+        if (! this.isDeterministic()){
+            System.out.println("The FA is not deterministic");
+            return false;
+        }
+
+        String currentState = this.getFA_q0();
+
+        for (String i : sequence.strip().split("")) {
+            if (!this.FA_d.containsKey(new Pair<>(currentState, i))){
+                return false;
+            }
+            currentState = this.FA_d.get(new Pair<>(currentState, i)).get(0);
+        }
+        for (String element : this.FA_F){
+            if (currentState.equals(element))
+                return true;
+        }
+        return false;
     }
 
 
