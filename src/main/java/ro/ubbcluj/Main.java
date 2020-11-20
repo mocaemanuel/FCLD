@@ -1,6 +1,7 @@
 package ro.ubbcluj;
 
 import ro.ubbcluj.domain.Automata.FiniteAutomata;
+import ro.ubbcluj.domain.grammar.Grammar;
 import ro.ubbcluj.services.LexicalAnalyzer;
 import ro.ubbcluj.domain.Symbol.SymbolTable;
 
@@ -84,14 +85,73 @@ public class Main {
         }
     }
 
+    private static void testGrammar() {
+        Grammar grammar = new Grammar("g1.txt");
+
+        while (true){
+            try {
+                System.out.println("" +
+                        "\nCommands: " +
+                        "\n1 - set of non-terminal symbols " +
+                        "\n2 - the alphabet (set of terminal symbols) " +
+                        "\n3 - the start symbol " +
+                        "\n4 - productions " +
+                        "\n5 - production for a given non-terminal " +
+                        "\n0 - exit." +
+                        "\n>> ");
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                int option = Integer.parseInt(br.readLine());
+
+                if (option == 1)
+                    System.out.println(Arrays.toString(grammar.getNonTerminals()));
+                else if (option == 2)
+                    System.out.println(Arrays.toString(grammar.getTerminals()));
+                else if (option == 3)
+                    System.out.println(grammar.getStartSymbol());
+                else if (option == 4) {
+                    for (String key : grammar.getProductions().keySet()) {
+                        System.out.print(key + " -");
+                        for (String[] e : grammar.getProductions().get(key)) {
+                            System.out.print(" (");
+                            for (String p : e)
+                                System.out.print(p + " ");
+                            System.out.print("\b)");
+                        }
+                        System.out.println();
+                    }
+
+                }
+                else if (option == 5) {
+                    String nonTerminal = br.readLine();
+                    System.out.print(nonTerminal + " -");
+                    for (String[] e : grammar.getProductionsByNonTerminal(nonTerminal)) {
+                        System.out.print(" (");
+                        for (String p : e)
+                            System.out.print(p + " ");
+                        System.out.print("\b)");
+                    }
+                    System.out.println();
+                }
+                else
+                    return;
+            } catch (Exception e){
+                System.out.println("ERROR!");
+            }
+        }
+    }
+
     public static void main(String[] args) {
 //        System.out.println("\n SYMBOL TABLE \n");
 //        testSymbolTable();
 
-        System.out.println("\n SCANNER \n");
-        testScanner();
+//        System.out.println("\n SCANNER \n");
+//        testScanner();
 
 //        System.out.println("\n FINITE AUTOMATA \n");
 //        testFiniteAutomata();
+
+        System.out.println("\n GRAMMAR \n");
+        testGrammar();
     }
 }
