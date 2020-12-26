@@ -81,8 +81,21 @@ public class LrParser {
     }
 
     public void canonicalCollection() {
-        // HashMap<> idk = new HashMap();
-        // ArrayList<HashMap<String, >>Queue
+        HashMap<String, ArrayList<ArrayList<String>>> idk = new HashMap<>();
+        ArrayList<HashMap<String, HashMap<String, ArrayList<String>>>> queue = new ArrayList<>();
+        ArrayList<String> states = new ArrayList<>();
+        HashMap<String, String> stateParents = new HashMap<>();
+
+        while (queue.size() > 0) {
+            this.goToAll(states, queue.get(0).get(""), 0, "");
+            queue.remove(0);
+        }
+
+        HashMap<String, ArrayList<String>> reduced = this.getReduced();
+
+        for (int i = 0; i < reduced.keySet().size(); i++) {
+
+        }
     }
 
     private void goToAll(ArrayList<String> state, HashMap<String, ArrayList<String>> initialDotted, int parent, String parentKey) {
@@ -94,6 +107,10 @@ public class LrParser {
     }
 
     private HashMap<String, ArrayList<ArrayList<String>>> removeTerminated (HashMap<String, ArrayList<String[]>> productions) {
+        return null;
+    }
+
+    private HashMap<String, ArrayList<String>> getReduced() {
         return null;
     }
 
