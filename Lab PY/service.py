@@ -280,9 +280,6 @@ class Lr0Parser:
         for state_key in hashmap:
             row = [state_key] + [hashmap[state_key][key] if key in hashmap[state_key] else "" for key in keys]
             rows.append(row)
-        # tab = tabulate(rows, headers, tablefmt="pretty")
-        # file_tab = tabulate(rows, headers, tablefmt="html")
-        # print(tab)
         print(headers)
         for row in rows:
             print(row)
@@ -369,8 +366,6 @@ class Lr0Parser:
                          self.listToString(output_band, ",")])
             print("Accepted")
             headers = ["Work stack", "Input stack", "Output band"]
-            # print(tabulate(rows, headers, tablefmt="pretty"))
-            # file_tab = tabulate(rows, headers, tablefmt="html")
             print(headers)
             for row in rows:
                 print(row)

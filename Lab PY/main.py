@@ -1,9 +1,8 @@
-from tabulate import tabulate
 from service import Lr0Parser
 
 
 def showMenu():
-    lr0 = Lr0Parser("g1.txt")
+    lr0 = Lr0Parser("g2.txt")
 
     print("""
     1 - print terminals
